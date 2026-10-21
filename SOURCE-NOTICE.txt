@@ -1,3 +1,10 @@
 The MathML converter was extracted and adapted from Longleaf SaaS. This repository is maintained as an independent reusable library and has no runtime dependency on Longleaf SaaS code.
 
 Copyright (C) 2026 Christopher C. Mitchell. Licensed under the MIT License; see LICENSE.
+
+The bounded converter includes native MathML DOM output, matrix and derivation
+environments, piecewise definitions, vector calculus, multiple and contour
+integrals, statistics, set and graph notation, and common AI/ML and tensor
+notation. Unsupported environments, package commands, and custom macros remain
+explicitly rejected. The optional mathml.css file supplies table-cell alignment
+for MathML Core browsers while preserving MathML column alignment hints.

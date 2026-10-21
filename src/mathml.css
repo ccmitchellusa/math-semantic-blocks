@@ -1,0 +1,12 @@
+/* Optional layout helpers for semantic MathML tables emitted by this package. */
+math mtable.math-semantic-blocks-table--aligned > mtr > mtd:nth-child(odd) {
+  text-align: right;
+}
+
+math mtable.math-semantic-blocks-table--aligned > mtr > mtd:nth-child(even) {
+  text-align: left;
+}
+
+math mtable.math-semantic-blocks-table--cases > mtr > mtd {
+  text-align: left;
+}

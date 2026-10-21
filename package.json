@@ -1,6 +1,6 @@
 {
   "name": "math-semantic-blocks",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Reusable Markdown math semantic blocks rendered as native MathML.",
   "type": "module",
   "files": [
@@ -15,6 +15,7 @@
   "exports": {
     ".": "./index.js",
     "./mathml": "./src/mathml.js",
+    "./mathml.css": "./src/mathml.css",
     "./markdown-it": "./src/markdown-it-plugin.js"
   },
   "peerDependencies": {

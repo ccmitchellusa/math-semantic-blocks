@@ -4,12 +4,12 @@ A reusable ESM library that converts a bounded LaTeX math subset to native MathM
 
 ## Install
 
-Install the archive with `npm install /path/to/math-semantic-blocks-1.0.0.tgz`. Node.js 18 or newer is required. The converter works on its own. The optional Markdown-it plugin is an adapter for a `markdown-it` 14 instance supplied by the consuming application; Markdown-it is an optional peer dependency.
+Install the archive with `npm install /path/to/math-semantic-blocks-1.1.0.tgz`. Node.js 18 or newer is required. The converter works on its own. The optional Markdown-it plugin is an adapter for a `markdown-it` 14 instance supplied by the consuming application; Markdown-it is an optional peer dependency.
 
 ## Convert a formula
 
 ```js
-import { texToMathML, isRenderableTex, TexUnsupportedError } from 'math-semantic-blocks';
+import { texToMathML, texToMathMLNode, isRenderableTex, TexUnsupportedError } from 'math-semantic-blocks';
 
 const markup = texToMathML(String.raw`\sqrt{x_1^2}`, { display: true });
 if (!isRenderableTex(input)) {
@@ -23,6 +23,8 @@ try {
 ```
 
 `texToMathML(tex, { display: true })` creates block MathML; the default is inline MathML. Unsupported commands throw `TexUnsupportedError`. Pass `{ onError: 'node' }` to return a visible MathML `<merror>` node instead of throwing.
+
+`texToMathMLNode(tex, document, opts)` creates namespaced MathML DOM nodes directly. It is useful when the host should avoid parsing generated markup.
 
 ## Add math rendering to Markdown-it
 
@@ -42,13 +44,31 @@ The plugin handles inline `$…$`, single-line `$$…$$`, and multiline display 
 
 ## Supported subset
 
-The converter supports common identifiers and numbers, Greek letters, fractions, roots, scripts, accents, scalable delimiters, common operators and relations, function names, and math alphabets. It is intentionally not a full LaTeX engine. Environments such as `matrix` and `align`, row breaks, and stacked `\limits` are unsupported. Unknown commands throw instead of silently producing misleading output.
+The converter supports a bounded research and teaching notation profile:
 
-The Markdown representation for a display-math semantic block is native `$$…$$` syntax. This package handles math parsing and display; it does not include a semantic-block registry, editor, or publishing pipeline.
+- Matrices: `matrix`, `pmatrix`, `bmatrix`, `Bmatrix`, `vmatrix`, and `Vmatrix`.
+- Derivations and piecewise definitions: `align`, `aligned`, `split`, `gather`, `gathered`, and `cases`.
+- Calculus: vector calculus, partial derivatives, limits, single and multiple integrals, and closed contour/surface integrals.
+- Statistics: expectation, probability, variance, covariance, correlation, distributions, independence, indicators, and binomial coefficients.
+- AI/ML and linear algebra: `argmin`/`argmax`, tensor products, bold vectors, transpose notation, operator names, and common objective/optimizer formulas.
+- Set and graph theory: membership, relations, set builders, graph/vertex/edge sets, degree, adjacency, distance, diameter, and girth.
+- Stacked operator limits, explicit `\limits`/`\nolimits`, `\substack`, `\underset`, `\overbrace`, and `\underbrace`.
+
+The converter is intentionally not a full LaTeX engine. `alignat`, `array` column specifications, custom environments, package macros, and arbitrary user-defined commands remain unsupported. Unknown commands throw instead of silently producing misleading output. Each expression is limited to 8,192 characters and 128 nested groups; matrix, alignment, gather, and cases tables are bounded to 128 rows and 32 columns, and `substack` to 128 rows.
+
+For aligned derivations and `cases`, load the optional layout stylesheet:
+
+```js
+import 'math-semantic-blocks/mathml.css';
+```
+
+The converter also emits MathML `columnalign` hints for renderers that support them; the stylesheet supplies the same cell alignment in MathML Core browsers.
+
+The Markdown representation for a display-math semantic block is native `$$…$$` syntax. This package handles math parsing and display; it does not include a general semantic-block registry, editor, or publishing pipeline.
 
 ## Source notice
 
-The converter was extracted and adapted from Longleaf SaaS. See `SOURCE-NOTICE.txt`; source-project copyright and licensing continue to apply. This archive does not grant a separate open-source license.
+The converter was extracted and adapted from Longleaf SaaS. See `SOURCE-NOTICE.txt` for provenance. This package is licensed under MIT; see `LICENSE`.
 
 ## Third-party licenses
 
