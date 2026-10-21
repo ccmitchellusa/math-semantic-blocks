@@ -1,0 +1,38 @@
+{
+  "name": "math-semantic-blocks",
+  "version": "1.0.0",
+  "description": "Reusable Markdown math semantic blocks rendered as native MathML.",
+  "type": "module",
+  "files": [
+    "index.js",
+    "src/",
+    "README.md",
+    "LICENSE",
+    "SOURCE-NOTICE.txt",
+    "examples/",
+    "THIRD-PARTY-LICENSES/"
+  ],
+  "exports": {
+    ".": "./index.js",
+    "./mathml": "./src/mathml.js",
+    "./markdown-it": "./src/markdown-it-plugin.js"
+  },
+  "peerDependencies": {
+    "markdown-it": ">=14 <15"
+  },
+  "peerDependenciesMeta": {
+    "markdown-it": {
+      "optional": true
+    }
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "MIT",
+  "author": "Christopher C. Mitchell",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ccmitchellusa/math-semantic-blocks.git"
+  },
+  "homepage": "https://github.com/ccmitchellusa/math-semantic-blocks#readme"
+}
