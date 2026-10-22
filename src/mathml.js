@@ -250,6 +250,61 @@ const _TEX_MATHVARIANT = {
   bm: 'bold-italic',
 };
 
+// Math alphabets as characters. MathML Core (Chromium) ignores every
+// `mathvariant` but `normal`, so `\mathbb{E}` drew as an italic E. Each
+// alphabet maps Latin letters, digits and (bold/italic) Greek to the Unicode
+// Mathematical Alphanumeric Symbols, with the letterlike "holes" (ℝ, ℒ, ℭ, ℎ)
+// taken from their older code points. `mathvariant` stays on the element for
+// engines that honour it; it leaves these characters as they are.
+const _MATH_ALPHABETS = {
+  bold: { upper: 0x1d400, lower: 0x1d41a, digit: 0x1d7ce, greek: 0x1d6a8 },
+  italic: { upper: 0x1d434, lower: 0x1d44e, greek: 0x1d6e2 },
+  'bold-italic': { upper: 0x1d468, lower: 0x1d482, greek: 0x1d71c },
+  script: { upper: 0x1d49c, lower: 0x1d4b6 },
+  fraktur: { upper: 0x1d504, lower: 0x1d51e },
+  'double-struck': { upper: 0x1d538, lower: 0x1d552, digit: 0x1d7d8 },
+  'sans-serif': { upper: 0x1d5a0, lower: 0x1d5ba, digit: 0x1d7e2 },
+  monospace: { upper: 0x1d670, lower: 0x1d68a, digit: 0x1d7f6 },
+};
+const _MATH_ALPHABET_HOLES = {
+  italic: { h: 'ℎ' },
+  script: {
+    B: 'ℬ', E: 'ℰ', F: 'ℱ', H: 'ℋ', I: 'ℐ', L: 'ℒ', M: 'ℳ', R: 'ℛ', e: 'ℯ', g: 'ℊ', o: 'ℴ',
+  },
+  fraktur: { C: 'ℭ', H: 'ℌ', I: 'ℑ', R: 'ℜ', Z: 'ℨ' },
+  'double-struck': { C: 'ℂ', H: 'ℍ', N: 'ℕ', P: 'ℙ', Q: 'ℚ', R: 'ℝ', Z: 'ℤ' },
+};
+// The Greek order of the Mathematical Alphanumeric Symbols after α…ω.
+const _MATH_GREEK_TAIL = '∂ϵϑϰϕϱϖ';
+
+function _mathAlphanumeric(text, variant) {
+  const alphabet = _MATH_ALPHABETS[variant];
+  if (!alphabet) return text;
+  const holes = _MATH_ALPHABET_HOLES[variant] || {};
+  let out = '';
+  for (const ch of text) {
+    const code = ch.codePointAt(0);
+    let mapped = null;
+    if (Object.prototype.hasOwnProperty.call(holes, ch)) mapped = holes[ch];
+    else if (code >= 0x41 && code <= 0x5a) mapped = String.fromCodePoint(alphabet.upper + code - 0x41);
+    else if (code >= 0x61 && code <= 0x7a) mapped = String.fromCodePoint(alphabet.lower + code - 0x61);
+    else if (code >= 0x30 && code <= 0x39 && alphabet.digit) {
+      mapped = String.fromCodePoint(alphabet.digit + code - 0x30);
+    } else if (alphabet.greek && code >= 0x391 && code <= 0x3a9 && code !== 0x3a2) {
+      mapped = String.fromCodePoint(alphabet.greek + code - 0x391);
+    } else if (alphabet.greek && code >= 0x3b1 && code <= 0x3c9) {
+      mapped = String.fromCodePoint(alphabet.greek + 26 + code - 0x3b1);
+    } else if (alphabet.greek && _MATH_GREEK_TAIL.includes(ch)) {
+      mapped = String.fromCodePoint(alphabet.greek + 51 + _MATH_GREEK_TAIL.indexOf(ch));
+    }
+    out += mapped || ch;
+  }
+  return out;
+}
+
+// ASCII operators TeX draws as other characters.
+const _TEX_ASCII_OPERATORS = { '-': '−', '*': '∗' };
+
 // Delimiters \left / \right may size. `.` is TeX's NULL delimiter: it opens
 // or closes nothing and renders no <mo> at all.
 const _TEX_DELIM = {
@@ -737,7 +792,7 @@ function _parseTexCmd(st, name) {
     return {
       t: 'mi',
       a: { mathvariant: _TEX_MATHVARIANT[name] },
-      s: _flattenTexText(_parseTexGroup(st)),
+      s: _mathAlphanumeric(_flattenTexText(_parseTexGroup(st)), _TEX_MATHVARIANT[name]),
     };
   }
   if (_TEX_ESCAPED.has(name)) return { t: 'mo', s: name };
@@ -832,7 +887,9 @@ function _parseTexBase(st) {
       }
       if (tk.v === '~') return { t: 'mspace', a: { width: '0.25em' }, s: '' };
       if (tk.v === "'") return { t: 'mo', s: '′' }; // f' is f-prime
-      return { t: 'mo', s: tk.v };
+      // TeX sets `-` as a minus sign and `*` as the asterisk operator; MathML
+      // draws the ASCII characters as a hyphen and a raised star.
+      return { t: 'mo', s: _TEX_ASCII_OPERATORS[tk.v] || tk.v };
     case 'lbrack':
       return { t: 'mo', s: '[' };
     case 'rbrack':
