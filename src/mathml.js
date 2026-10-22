@@ -23,7 +23,7 @@ const _TEX_GREEK = {
   beta: 'β',
   gamma: 'γ',
   delta: 'δ',
-  epsilon: 'ε',
+  epsilon: 'ϵ', // U+03F5: TeX's \epsilon is the lunate form
   varepsilon: 'ε',
   zeta: 'ζ',
   eta: 'η',
@@ -43,8 +43,8 @@ const _TEX_GREEK = {
   varsigma: 'ς',
   tau: 'τ',
   upsilon: 'υ',
-  phi: 'φ',
-  varphi: 'ϕ',
+  phi: 'ϕ', // U+03D5: TeX's \phi is the straight form
+  varphi: 'φ',
   chi: 'χ',
   psi: 'ψ',
   omega: 'ω',
@@ -193,7 +193,6 @@ const _TEX_FUNC = new Set([
   'arcsin',
   'arccos',
   'arctan',
-  'mod',
   'Pr',
   'Var',
   'Cov',
@@ -837,6 +836,20 @@ function _parseTexCmd(st, name) {
     }
     return { t: 'msqrt', c: [_parseTexGroup(st)] };
   }
+  if (name === 'mod') {
+    // amsmath's \mod{n}: a space (18mu in display, 12mu inline), upright
+    // "mod", two thin spaces, then the modulus.
+    const modulus = _parseTexGroup(st);
+    return {
+      t: 'mrow',
+      c: [
+        { t: 'mspace', a: { width: st.display ? '1em' : '0.6667em' }, s: '' },
+        { t: 'mi', s: 'mod' },
+        { t: 'mspace', a: { width: '0.3333em' }, s: '' },
+        modulus,
+      ],
+    };
+  }
   if (name === 'text' || name === 'mbox') {
     return { t: 'mtext', s: _parseTexTextArg(st) };
   }
@@ -991,7 +1004,7 @@ function _parseTexRow(st, stopKind, stopCmd, stopMatrixBoundary = false) {
 function _texToMathTree(tex, display) {
   const src = String(tex == null ? '' : tex);
   _checkTexBounds(src);
-  const st = { t: _tokTex(src), i: 0, src };
+  const st = { t: _tokTex(src), i: 0, src, display: !!display };
   const row = _parseTexRow(st, null);
   if (st.i < st.t.length) throw _unbalanced('delimiters');
   const a = { xmlns: _MML_NS, display: display ? 'block' : 'inline', 'data-tex': src };
