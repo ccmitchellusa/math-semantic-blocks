@@ -425,6 +425,14 @@ function _mathAlphanumeric(text, variant) {
   return out;
 }
 
+// Delimiters TeX sets at their natural size unless \left/\right/\big asks
+// otherwise. MathML stretches a fence to its row's height by default (with
+// any OpenType math font), so a bare one is marked stretchy="false".
+const _TEX_BARE_DELIMITERS = new Set([
+  '(', ')', '[', ']', '{', '}', '|', '‖', '⟨', '⟩', '⌊', '⌋', '⌈', '⌉', '⟮', '⟯', '⟦', '⟧', '/', '\\',
+]);
+const _bareDelimiter = (s) => (_TEX_BARE_DELIMITERS.has(s) ? { t: 'mo', a: { stretchy: 'false' }, s } : { t: 'mo', s });
+
 // ASCII operators TeX draws as other characters.
 const _TEX_ASCII_OPERATORS = { '-': '−', '*': '∗' };
 
@@ -1138,7 +1146,7 @@ function _parseTexCmd(st, name) {
       s: _mathAlphanumeric(_flattenTexText(_parseTexGroup(st)), _TEX_MATHVARIANT[name]),
     };
   }
-  if (_TEX_ESCAPED.has(name)) return { t: 'mo', s: name };
+  if (_TEX_ESCAPED.has(name)) return _bareDelimiter(name);
   if (name === 'frac' || name === 'dfrac' || name === 'tfrac' || name === 'cfrac') {
     const num = _parseTexGroup(st);
     const den = _parseTexGroup(st);
@@ -1211,7 +1219,7 @@ function _parseTexCmd(st, name) {
     if (_starNext(st)) {
       return { t: 'mo', a: { movablelimits: 'true' }, s: _parseTexTextArg(st).trim(), limitEligible: true };
     }
-    return { t: 'mi', s: _parseTexTextArg(st).trim() };
+    return { t: 'mi', s: _parseTexTextArg(st).trim(), fn: true };
   }
   if (Object.prototype.hasOwnProperty.call(_TEX_GREEK, name)) {
     return { t: 'mi', s: _TEX_GREEK[name] };
@@ -1221,6 +1229,7 @@ function _parseTexCmd(st, name) {
   }
   if (Object.prototype.hasOwnProperty.call(_TEX_OP, name)) {
     const limitEligible = _TEX_LIMIT_OPERATORS.has(name);
+    if (!limitEligible && _TEX_BARE_DELIMITERS.has(_TEX_OP[name])) return _bareDelimiter(_TEX_OP[name]);
     return {
       t: 'mo',
       ...(limitEligible ? { a: { movablelimits: 'true' } } : {}),
@@ -1232,7 +1241,7 @@ function _parseTexCmd(st, name) {
     const limitEligible = _TEX_LIMIT_OPERATORS.has(name);
     return limitEligible
       ? { t: 'mo', a: { movablelimits: 'true' }, s: name, limitEligible: true }
-      : { t: 'mi', s: name };
+      : { t: 'mi', s: name, fn: true };
   }
   if (Object.prototype.hasOwnProperty.call(_TEX_SPACING, name)) {
     const width = _TEX_SPACING[name];
@@ -1261,11 +1270,11 @@ function _parseTexBase(st) {
       if (tk.v === "'") return { t: 'mo', s: '′' }; // f' is f-prime
       // TeX sets `-` as a minus sign and `*` as the asterisk operator; MathML
       // draws the ASCII characters as a hyphen and a raised star.
-      return { t: 'mo', s: _TEX_ASCII_OPERATORS[tk.v] || tk.v };
+      return _TEX_ASCII_OPERATORS[tk.v] ? { t: 'mo', s: _TEX_ASCII_OPERATORS[tk.v] } : _bareDelimiter(tk.v);
     case 'lbrack':
-      return { t: 'mo', s: '[' };
+      return _bareDelimiter('[');
     case 'rbrack':
-      return { t: 'mo', s: ']' };
+      return _bareDelimiter(']');
     case 'lb': {
       const row = _parseTexRow(st, 'rb');
       _closeBrace(st);
@@ -1318,10 +1327,37 @@ function _parseTexScripts(st, base, limitMode = null) {
     if (sub) return { t: 'munder', c: [base, sub] };
     if (sup) return { t: 'mover', c: [base, sup] };
   }
-  if (sub && sup) return { t: 'msubsup', c: [base, sub, sup] };
-  if (sub) return { t: 'msub', c: [base, sub] };
-  if (sup) return { t: 'msup', c: [base, sup] };
+  // \sin^2 x: the scripted name is still the function the argument follows.
+  const fn = base.fn ? { fn: true } : {};
+  if (sub && sup) return { t: 'msubsup', c: [base, sub, sup], ...fn };
+  if (sub) return { t: 'msub', c: [base, sub], ...fn };
+  if (sup) return { t: 'msup', c: [base, sup], ...fn };
   return base;
+}
+
+// TeX's spacing around a function name (\log, \sin, \operatorname{…}), an
+// Op atom: a thin space after an ordinary atom before it and before an
+// ordinary atom after it; none next to an operator, relation, punctuation or
+// opening delimiter, which bring their own. The name is followed by U+2061
+// FUNCTION APPLICATION, so \log n reads "log of n", not "l o g n".
+const _thinSpace = () => ({ t: 'mspace', a: { width: '0.1667em' }, s: '' });
+const _isOrdinary = (node) => node && node.t !== 'mo' && node.t !== 'mspace';
+const _closesLikeOrdinary = (node) => _isOrdinary(node) || (node?.t === 'mo' && /^[)\]}|‖⟩⌋⌉⟯⟧]$/.test(node.s || ''));
+
+function _spaceFunctions(row) {
+  if (!row.some((node) => node.fn)) return row;
+  const out = [];
+  row.forEach((node, index) => {
+    if (!node.fn) {
+      out.push(node);
+      return;
+    }
+    if (_closesLikeOrdinary(out[out.length - 1])) out.push(_thinSpace());
+    out.push(node);
+    const next = row[index + 1];
+    out.push(_isOrdinary(next) ? { t: 'mo', a: { lspace: '0em', rspace: '0.1667em' }, s: '\u2061' } : { t: 'mo', s: '\u2061' });
+  });
+  return out;
 }
 
 // `stopKind` halts on a token KIND; `stopCmd` halts on a `cmd` token by NAME (which
@@ -1333,7 +1369,7 @@ function _parseTexScripts(st, base, limitMode = null) {
 function _parseTexRow(st, stopKind, stopCmd, stopMatrixBoundary = false, continuation = false) {
   if (!continuation) st.rowDepth = (st.rowDepth || 0) + 1;
   try {
-    return _parseTexRowItems(st, stopKind, stopCmd, stopMatrixBoundary, continuation);
+    return _spaceFunctions(_parseTexRowItems(st, stopKind, stopCmd, stopMatrixBoundary, continuation));
   } finally {
     if (!continuation) st.rowDepth -= 1;
   }

@@ -42,3 +42,12 @@ test('notation examples', () => {
   assert.match(texToMathML('a \\mod n'), /<mspace width="0.6667em"><\/mspace><mi>mod<\/mi>/);
   assert.match(texToMathML('\\epsilon \\phi'), /<mi>ϵ<\/mi><mi>ϕ<\/mi>/);
 });
+
+test('bare delimiters keep their size; function names take operator spacing', () => {
+  const inner = (tex) => texToMathML(tex).replace(/^<math[^>]*>|<\/math>$/g, '');
+  assert.match(inner('f(x)'), /<mo stretchy="false">\(<\/mo>/);
+  assert.doesNotMatch(inner('\\left( x \\right)'), /stretchy="false"/);
+  assert.equal(inner('O(n \\log n)'),
+    '<mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mspace width="0.1667em"></mspace><mi>log</mi>'
+    + '<mo lspace="0em" rspace="0.1667em">\u2061</mo><mi>n</mi><mo stretchy="false">)</mo>');
+});
