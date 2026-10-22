@@ -51,3 +51,11 @@ test('bare delimiters keep their size; function names take operator spacing', ()
     '<mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mspace width="0.1667em"></mspace><mi>log</mi>'
     + '<mo lspace="0em" rspace="0.1667em">\u2061</mo><mi>n</mi><mo stretchy="false">)</mo>');
 });
+
+test('texToPlainText reads a formula as readable Unicode text', async () => {
+  const { texToPlainText } = await import('../src/mathml.js');
+  assert.equal(texToPlainText('\\mathcal{L}_{\\text{Gauge}}'), 'ℒ_Gauge');
+  assert.equal(texToPlainText('x^2 + y_1 = z'), 'x² + y₁ = z');
+  assert.equal(texToPlainText('O(n \\log n)'), 'O(n log n)');
+  assert.equal(texToPlainText('\\href{x}{y}'), '\\href{x}{y}');
+});

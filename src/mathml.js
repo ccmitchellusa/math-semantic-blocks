@@ -1541,6 +1541,97 @@ export function texToMathMLNode(tex, doc, opts = {}) {
   return _mathTreeToDom(tree, doc);
 }
 
+// --- Plain-text reading ------------------------------------------------------
+//
+// A readable Unicode approximation of a formula, for places that hold text
+// only: a document or tab title, an aria-label, an SVG label, a PDF bookmark.
+// Built from the same tree, so it reads what the MathML shows: \mathcal{L}
+// is ℒ, x^2 is x², L_{\text{Gauge}} is L_Gauge, \frac{a}{b} is a/b.
+
+const _SUPERSCRIPTS = {
+  0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹',
+  '+': '⁺', '−': '⁻', '-': '⁻', '=': '⁼', '(': '⁽', ')': '⁾', n: 'ⁿ', i: 'ⁱ',
+};
+const _SUBSCRIPTS = {
+  0: '₀', 1: '₁', 2: '₂', 3: '₃', 4: '₄', 5: '₅', 6: '₆', 7: '₇', 8: '₈', 9: '₉',
+  '+': '₊', '−': '₋', '-': '₋', '=': '₌', '(': '₍', ')': '₎',
+};
+// Accent marks as combining characters, set after a one-character base.
+const _COMBINING = {
+  'ˆ': '\u0302', '¯': '\u0304', '→': '\u20d7', '˜': '\u0303', '˙': '\u0307', '¨': '\u0308',
+  'ˊ': '\u0301', 'ˋ': '\u0300', '˘': '\u0306', 'ˇ': '\u030c', '˚': '\u030a',
+};
+// Relations and binary operators read with a space either side at the top
+// level (x² + y₁ = z); inside a script they stay tight (∑_(i=1)).
+const _SPACED_OPERATORS = new Set([...'=+−±∓×÷⋅∗≤≥≠≡≈≅∼≃∝≪≫<>→←↔⇒⇐⇔⟹⟸⟺↦∈∉∋⊂⊃⊆⊇∪∩∖∧∨⊕⊗⊙≔']);
+
+function _scriptText(text, table, mark) {
+  if (!text) return '';
+  const chars = [...text];
+  if (chars.every((ch) => Object.prototype.hasOwnProperty.call(table, ch))) return chars.map((ch) => table[ch]).join('');
+  if (chars.length === 1 || /^[\p{L}\p{N}]+$/u.test(text)) return `${mark}${text}`;
+  return `${mark}(${text})`;
+}
+
+const _grouped = (text) => ([...text].length > 1 && /[^\p{L}\p{N}.]/u.test(text) ? `(${text})` : text);
+
+function _plainOf(node, depth = 0) {
+  if (!node) return '';
+  const kids = node.c || [];
+  const inner = (child) => _plainOf(child, depth + 1);
+  switch (node.t) {
+    case 'mi': case 'mn': case 'mtext':
+      return node.s || '';
+    case 'mo':
+      // Function application reads as the space TeX sets after a name (log n).
+      if (node.s === '\u2061') return parseFloat(node.a?.rspace || '0') > 0 ? ' ' : '';
+      return depth === 0 && _SPACED_OPERATORS.has(node.s) ? ` ${node.s} ` : node.s || '';
+    case 'mspace':
+      return parseFloat(node.a?.width || '0') >= 0.16 ? ' ' : '';
+    case 'mphantom':
+      return '';
+    case 'msub': case 'munder':
+      if (node.a?.accent === 'true' || kids[1]?.a?.stretchy === 'true') return inner(kids[0]);
+      return inner(kids[0]) + _scriptText(inner(kids[1]), _SUBSCRIPTS, '_');
+    case 'msup':
+      return inner(kids[0]) + _scriptText(inner(kids[1]), _SUPERSCRIPTS, '^');
+    case 'msubsup': case 'munderover': {
+      // A big operator's limits, then a space before its operand (∑_(i=1)ⁿ i).
+      const after = kids[0]?.a?.movablelimits ? ' ' : '';
+      return inner(kids[0]) + _scriptText(inner(kids[1]), _SUBSCRIPTS, '_') + _scriptText(inner(kids[2]), _SUPERSCRIPTS, '^') + after;
+    }
+    case 'mover': {
+      const base = inner(kids[0]);
+      const mark = inner(kids[1]);
+      if (node.a?.accent === 'true') return [...base].length === 1 && _COMBINING[mark] ? base + _COMBINING[mark] : base;
+      if (kids[1]?.a?.stretchy === 'true') return base;
+      return base + _scriptText(mark, _SUPERSCRIPTS, '^');
+    }
+    case 'mfrac':
+      return `${_grouped(inner(kids[0]))}/${_grouped(inner(kids[1]))}`;
+    case 'msqrt':
+      return `√${_grouped(kids.map(inner).join(''))}`;
+    case 'mroot':
+      return `${_scriptText(inner(kids[1]), _SUPERSCRIPTS, '^')}√${_grouped(inner(kids[0]))}`;
+    case 'mtable':
+      return kids.map(inner).join('; ');
+    case 'mtr':
+      return kids.map(inner).filter(Boolean).join(' ');
+    default:
+      return kids.map((child) => _plainOf(child, depth)).join('');
+  }
+}
+
+/** A readable Unicode approximation of `tex`; its source when it is outside the subset. */
+export function texToPlainText(tex) {
+  try {
+    return _plainOf(_texToMathTree(tex, false)).replace(/\s+/g, ' ').replace(/\( /g, '(').replace(/ \)/g, ')').trim();
+  } catch (err) {
+    if (err instanceof TexUnsupportedError) return String(tex == null ? '' : tex).trim();
+    throw err;
+  }
+}
+
 /** True when {@link texToMathML} can typeset `tex`. Never throws. */
 export function isRenderableTex(tex, opts = {}) {
   try {

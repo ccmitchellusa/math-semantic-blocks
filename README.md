@@ -22,7 +22,7 @@ try {
 }
 ```
 
-`texToMathML(tex, { display: true })` creates block MathML; the default is inline MathML. Unsupported commands throw `TexUnsupportedError`. Pass `{ onError: 'node' }` to return a visible MathML `<merror>` node instead of throwing.
+`texToPlainText(tex)` gives a readable Unicode form of a formula (ℒ_Gauge, x², O(n log n)) for places that hold text only, such as a document title or an `aria-label`. `texToMathML(tex, { display: true })` creates block MathML; the default is inline MathML. Unsupported commands throw `TexUnsupportedError`. Pass `{ onError: 'node' }` to return a visible MathML `<merror>` node instead of throwing.
 
 `texToMathMLNode(tex, document, opts)` creates namespaced MathML DOM nodes directly. It is useful when the host should avoid parsing generated markup.
 
