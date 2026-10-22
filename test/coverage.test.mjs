@@ -1,0 +1,44 @@
+// The pinned subset (test/fixtures/coverage.json): every renderable entry
+// typesets to MathML, every unsupported one throws TexUnsupportedError.
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { TexUnsupportedError, isRenderableTex, texToMathML } from '../src/mathml.js';
+
+const COVERAGE = JSON.parse(readFileSync(new URL('./fixtures/coverage.json', import.meta.url), 'utf8'));
+const GROUPS = Object.keys(COVERAGE).filter((key) => Array.isArray(COVERAGE[key]) && key !== 'unsupported');
+
+test('every pinned construct typesets', () => {
+  const failures = [];
+  for (const group of GROUPS) {
+    for (const tex of COVERAGE[group]) {
+      for (const display of group === 'display_only' ? [true] : [false, true]) {
+        try {
+          const mathml = texToMathML(tex, { display });
+          if (!mathml.startsWith('<math') || mathml.includes('<merror')) failures.push(`${group}: ${tex}`);
+        } catch (error) {
+          failures.push(`${group}: ${tex} (${error.message})`);
+        }
+      }
+    }
+  }
+  assert.deepEqual(failures, []);
+});
+
+test('every pinned unsupported construct throws TexUnsupportedError', () => {
+  for (const tex of COVERAGE.unsupported) {
+    assert.equal(isRenderableTex(tex), false, tex);
+    assert.throws(() => texToMathML(tex), TexUnsupportedError, tex);
+  }
+});
+
+test('notation examples', () => {
+  const inner = (tex, opts) => texToMathML(tex, opts).replace(/^<math[^>]*>|<\/math>$/g, '');
+  assert.match(inner('i\\hbar \\frac{\\partial}{\\partial t}\\Psi'), /^<mi>i<\/mi><mi>ℏ<\/mi><mfrac>/);
+  assert.equal(inner('\\not\\in \\not= \\slashed{D}'), '<mo>∉</mo><mo>≠</mo><mi>D̸</mi>');
+  assert.equal(inner('\\color{red} x'), '<mi>x</mi>');
+  assert.match(inner('E \\tag{1}', { display: true }), /class="math-semantic-blocks-table--tagged"/);
+  assert.throws(() => texToMathML('E \\tag{1}'), /only typeset in display math/);
+  assert.match(texToMathML('a \\mod n'), /<mspace width="0.6667em"><\/mspace><mi>mod<\/mi>/);
+  assert.match(texToMathML('\\epsilon \\phi'), /<mi>ϵ<\/mi><mi>ϕ<\/mi>/);
+});

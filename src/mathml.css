@@ -10,3 +10,54 @@ math mtable.math-semantic-blocks-table--aligned > mtr > mtd:nth-child(even) {
 math mtable.math-semantic-blocks-table--cases > mtr > mtd {
   text-align: left;
 }
+
+/* array columns declared l or r (c is the default). */
+math mtd.math-semantic-blocks-cell--left {
+  text-align: left;
+}
+
+math mtd.math-semantic-blocks-cell--right {
+  text-align: right;
+}
+
+/* \tag: a full-width row, the equation centred and its label at the end. */
+math mtable.math-semantic-blocks-table--tagged {
+  inline-size: 100%;
+}
+
+math mtable.math-semantic-blocks-table--tagged > mtr > mtd:first-child,
+math mtd.math-semantic-blocks-tag {
+  inline-size: 4em;
+}
+
+math mtd.math-semantic-blocks-tag {
+  text-align: right;
+}
+
+/* \boxed and \cancel: MathML Core (Chromium) does not draw <menclose>. */
+math menclose[notation="box"] {
+  border: 0.0667em solid;
+  padding: 0.2em 0.3em;
+}
+
+math menclose[notation*="diagonalstrike"] {
+  background-repeat: no-repeat;
+}
+
+math menclose[notation="updiagonalstrike"] {
+  background-image: linear-gradient(to top right, transparent calc(50% - 0.04em), currentColor calc(50% - 0.04em),
+    currentColor calc(50% + 0.04em), transparent calc(50% + 0.04em));
+}
+
+math menclose[notation="downdiagonalstrike"] {
+  background-image: linear-gradient(to bottom right, transparent calc(50% - 0.04em), currentColor calc(50% - 0.04em),
+    currentColor calc(50% + 0.04em), transparent calc(50% + 0.04em));
+}
+
+math menclose[notation="updiagonalstrike downdiagonalstrike"] {
+  background-image:
+    linear-gradient(to top right, transparent calc(50% - 0.04em), currentColor calc(50% - 0.04em),
+      currentColor calc(50% + 0.04em), transparent calc(50% + 0.04em)),
+    linear-gradient(to bottom right, transparent calc(50% - 0.04em), currentColor calc(50% - 0.04em),
+      currentColor calc(50% + 0.04em), transparent calc(50% + 0.04em));
+}

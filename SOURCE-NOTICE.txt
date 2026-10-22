@@ -5,6 +5,9 @@ Copyright (C) 2026 Christopher C. Mitchell. Licensed under the MIT License; see 
 The bounded converter includes native MathML DOM output, matrix and derivation
 environments, piecewise definitions, vector calculus, multiple and contour
 integrals, statistics, set and graph notation, and common AI/ML and tensor
-notation. Unsupported environments, package commands, and custom macros remain
-explicitly rejected. The optional mathml.css file supplies table-cell alignment
-for MathML Core browsers while preserving MathML column alignment hints.
+notation, plus the everyday KaTeX/MathJax symbol, sizing, annotation and
+Dirac-notation set pinned by test/fixtures/coverage.json. Unsupported
+environments, package commands, and custom macros remain explicitly rejected.
+The optional mathml.css file supplies table-cell alignment, \tag labels and
+the \boxed/\cancel enclosures for MathML Core browsers while preserving
+MathML column alignment hints.

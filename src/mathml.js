@@ -59,6 +59,8 @@ const _TEX_GREEK = {
   Phi: 'Φ',
   Psi: 'Ψ',
   Omega: 'Ω',
+  varkappa: 'ϰ',
+  digamma: 'ϝ',
 };
 
 const _TEX_OP = {
@@ -158,7 +160,113 @@ const _TEX_OP = {
   surd: '√',
   vert: '|',
   Vert: '‖',
+  '|': '‖', // \| is TeX's double bar
+  // Binary operators.
+  ominus: '⊖', oslash: '⊘', bigcirc: '◯', amalg: '⨿', sqcup: '⊔', sqcap: '⊓', uplus: '⊎', wr: '≀',
+  diamond: '⋄', triangleleft: '◃', triangleright: '▹', bigtriangleup: '△', bigtriangledown: '▽',
+  lhd: '⊲', rhd: '⊳', unlhd: '⊴', unrhd: '⊵', centerdot: '⋅', intercal: '⊺', barwedge: '⊼',
+  veebar: '⊻', curlywedge: '⋏', curlyvee: '⋎', boxplus: '⊞', boxminus: '⊟', boxtimes: '⊠',
+  boxdot: '⊡', circleddash: '⊝', circledast: '⊛', circledcirc: '⊚', divideontimes: '⋇',
+  dotplus: '∔', ltimes: '⋉', rtimes: '⋊', leftthreetimes: '⋋', rightthreetimes: '⋌', Cap: '⋒',
+  Cup: '⋓', lnot: '¬',
+  // Relations.
+  prec: '≺', succ: '≻', preceq: '⪯', succeq: '⪰', parallel: '∥', nparallel: '∦', models: '⊨',
+  vdash: '⊢', dashv: '⊣', vDash: '⊨', Vdash: '⊩', Vvdash: '⊪', asymp: '≍', doteq: '≐',
+  doteqdot: '≑', Doteq: '≑', bowtie: '⋈', Join: '⋈', smile: '⌣', frown: '⌢', smallsmile: '⌣',
+  smallfrown: '⌢', sqsubset: '⊏', sqsupset: '⊐', sqsubseteq: '⊑', sqsupseteq: '⊒', Subset: '⋐',
+  Supset: '⋑', lesssim: '≲', gtrsim: '≳', lessapprox: '⪅', gtrapprox: '⪆', leqslant: '⩽',
+  geqslant: '⩾', lll: '⋘', ggg: '⋙', approxeq: '≊', backsim: '∽', backsimeq: '⋍', eqsim: '≂',
+  triangleq: '≜', coloneqq: '≔', risingdotseq: '≓', fallingdotseq: '≒', circeq: '≗', bumpeq: '≏',
+  Bumpeq: '≎', therefore: '∴', because: '∵', between: '≬', pitchfork: '⋔', varpropto: '∝',
+  lessgtr: '≶', gtrless: '≷', lesseqgtr: '⋚', gtreqless: '⋛', precsim: '≾', succsim: '≿',
+  trianglelefteq: '⊴', trianglerighteq: '⊵', vartriangleleft: '⊲', vartriangleright: '⊳',
+  owns: '∋', leqq: '≦', geqq: '≧', lneq: '⪇', gneq: '⪈', lneqq: '≨', gneqq: '≩', nleq: '≰',
+  ngeq: '≱', nless: '≮', ngtr: '≯', nprec: '⊀', nsucc: '⊁', nsim: '≁', nmid: '∤', nvdash: '⊬',
+  nvDash: '⊭', nVdash: '⊮', ntriangleleft: '⋪', ntriangleright: '⋫', subsetneqq: '⫋',
+  supsetneqq: '⫌', lt: '<', gt: '>',
+  // Arrows.
+  Leftrightarrow: '⇔', longrightarrow: '⟶', longleftarrow: '⟵', longleftrightarrow: '⟷',
+  Longrightarrow: '⟹', Longleftarrow: '⟸', Longleftrightarrow: '⟺', longmapsto: '⟼',
+  uparrow: '↑', downarrow: '↓', updownarrow: '↕', Uparrow: '⇑', Downarrow: '⇓', Updownarrow: '⇕',
+  nearrow: '↗', searrow: '↘', swarrow: '↙', nwarrow: '↖', hookrightarrow: '↪', hookleftarrow: '↩',
+  rightharpoonup: '⇀', rightharpoondown: '⇁', leftharpoonup: '↼', leftharpoondown: '↽',
+  rightleftharpoons: '⇌', leftrightharpoons: '⇋', leadsto: '⇝', rightsquigarrow: '⇝',
+  leftrightsquigarrow: '↭', twoheadrightarrow: '↠', twoheadleftarrow: '↞', rightarrowtail: '↣',
+  leftarrowtail: '↢', looparrowright: '↬', looparrowleft: '↫', curvearrowright: '↷',
+  curvearrowleft: '↶', circlearrowright: '↻', circlearrowleft: '↺', Lsh: '↰', Rsh: '↱',
+  upharpoonleft: '↿', upharpoonright: '↾', downharpoonleft: '⇃', downharpoonright: '⇂',
+  rightrightarrows: '⇉', leftleftarrows: '⇇', rightleftarrows: '⇄', leftrightarrows: '⇆',
+  upuparrows: '⇈', downdownarrows: '⇊', Rrightarrow: '⇛', Lleftarrow: '⇚', multimap: '⊸',
+  nleftarrow: '↚', nrightarrow: '↛', nLeftarrow: '⇍', nRightarrow: '⇏', nleftrightarrow: '↮',
+  nLeftrightarrow: '⇎',
+  // Big operators (movable limits: _TEX_LIMIT_OPERATORS).
+  coprod: '∐', bigoplus: '⨁', bigotimes: '⨂', bigodot: '⨀', biguplus: '⨄', bigsqcup: '⨆',
+  bigvee: '⋁', bigwedge: '⋀',
+  // Dots.
+  ddots: '⋱', dotsb: '⋯', dotsc: '…', dotsi: '⋯', dotsm: '⋯', dotso: '…', mathellipsis: '…',
+  cdotp: '⋅', ldotp: '.',
+  // Delimiters on their own (outside \left / \right).
+  lvert: '|', rvert: '|', lVert: '‖', rVert: '‖', lbrace: '{', rbrace: '}', lbrack: '[', rbrack: ']',
+  lgroup: '⟮', rgroup: '⟯', llbracket: '⟦', rrbracket: '⟧', backslash: '\\',
 };
+
+// Ordinary symbols (TeX's \mathord): letterlike symbols, suits, daggers and
+// the like are identifiers, <mi>. As an <mo> they would take operator spacing
+// (\hbar in `i\hbar` must sit against the i).
+const _TEX_ORD = {
+  hbar: 'ℏ', hslash: 'ℏ', Re: 'ℜ', Im: 'ℑ', wp: '℘', aleph: 'ℵ', beth: 'ℶ', gimel: 'ℷ',
+  daleth: 'ℸ', eth: 'ð', Finv: 'Ⅎ', Game: '⅁', complement: '∁', imath: 'ı', jmath: 'ȷ', mho: '℧',
+  Bbbk: '𝕜', nexists: '∄', degree: '°', Box: '□', square: '□', blacksquare: '■', Diamond: '◊',
+  lozenge: '◊', blacklozenge: '⧫', clubsuit: '♣', diamondsuit: '♢', heartsuit: '♡',
+  spadesuit: '♠', flat: '♭', natural: '♮', sharp: '♯', checkmark: '✓', dagger: '†', ddagger: '‡',
+  dag: '†', ddag: '‡', backprime: '‵', triangledown: '▽', blacktriangle: '▲',
+  blacktriangledown: '▼', bigstar: '★', diagup: '╱', diagdown: '╲', sphericalangle: '∢',
+  measuredangle: '∡', vartriangle: '△', maltese: '✠', circledS: 'Ⓢ',
+};
+
+// amsmath's spaced arrows: a thick space either side of the relation.
+const _TEX_SPACED_RELATIONS = { implies: '⟹', impliedby: '⟸', iff: '⟺' };
+
+// \not over a relation: the precomposed negation where Unicode has one,
+// otherwise the character with U+0338 COMBINING LONG SOLIDUS OVERLAY.
+const _TEX_NEGATED = {
+  '=': '≠', '<': '≮', '>': '≯', '∈': '∉', '∋': '∌', '≡': '≢', '⊂': '⊄', '⊃': '⊅', '⊆': '⊈',
+  '⊇': '⊉', '≤': '≰', '≥': '≱', '∼': '≁', '≈': '≉', '≅': '≇', '≃': '≄', '|': '∤', '∣': '∤',
+  '∥': '∦', '∃': '∄', '≺': '⊀', '≻': '⊁', '⊢': '⊬', '⊨': '⊭', '⊩': '⊮', '≍': '≭', '⊑': '⋢',
+  '⊒': '⋣', '⊲': '⋪', '⊳': '⋫', '⊴': '⋬', '⊵': '⋭', '→': '↛', '←': '↚', '↔': '↮', '⇒': '⇏',
+  '⇐': '⇍', '⇔': '⇎', '≲': '≴', '≳': '≵', '≶': '≸', '≷': '≹', '⪯': '⪯̸', '⪰': '⪰̸',
+};
+
+// \big … \Bigg (and their l / r / m forms): a delimiter at TeX's fixed sizes.
+const _TEX_BIG_DELIMS = {};
+for (const [base, size] of [['big', '1.2em'], ['Big', '1.8em'], ['bigg', '2.4em'], ['Bigg', '3em']]) {
+  for (const role of ['', 'l', 'r', 'm']) _TEX_BIG_DELIMS[base + role] = { size, role };
+}
+
+// Style switches: the rest of the group in display, text, script or
+// scriptscript style.
+const _TEX_STYLES = {
+  displaystyle: { displaystyle: 'true', scriptlevel: '0' },
+  textstyle: { displaystyle: 'false', scriptlevel: '0' },
+  scriptstyle: { displaystyle: 'false', scriptlevel: '1' },
+  scriptscriptstyle: { displaystyle: 'false', scriptlevel: '2' },
+};
+
+// \cancel and \boxed: native MathML enclosures (the renderer's CSS draws
+// them where the engine does not, as Chromium's MathML Core does not).
+const _TEX_ENCLOSE = {
+  cancel: 'updiagonalstrike',
+  bcancel: 'downdiagonalstrike',
+  xcancel: 'updiagonalstrike downdiagonalstrike',
+  boxed: 'box',
+};
+
+// Text-mode commands: \text with a font. Bold, italic and sans text use the
+// math alphabets' characters, as the alphabet commands do.
+const _TEX_TEXT_FONTS = { textrm: null, textnormal: null, textup: null, textbf: 'bold', textit: 'italic', textsf: 'sans-serif' };
+
+// Commands accepted and not drawn: equation labels and numbering switches.
+const _TEX_IGNORED = new Set(['nonumber', 'notag']);
 
 const _TEX_FUNC = new Set([
   'sin',
@@ -204,12 +312,14 @@ const _TEX_FUNC = new Set([
   'girth',
   'adj',
   'card',
+  'hom',
 ]);
 
 const _TEX_LIMIT_OPERATORS = new Set([
   'sum', 'prod', 'int', 'iint', 'iiint', 'iiiint', 'oint', 'oiint', 'oiiint',
   'bigcup', 'bigcap', 'lim', 'limsup', 'liminf', 'max', 'min', 'sup', 'inf',
-  'argmin', 'argmax',
+  'argmin', 'argmax', 'coprod', 'bigoplus', 'bigotimes', 'bigodot', 'biguplus', 'bigsqcup',
+  'bigvee', 'bigwedge',
 ]);
 
 // Accents. Each renders as <mover accent="true"> (or <munder> for
@@ -227,6 +337,15 @@ const _TEX_ACCENT = {
   widetilde: { s: '˜', over: true },
   dot: { s: '˙', over: true }, // DOT ABOVE
   ddot: { s: '¨', over: true }, // DIAERESIS
+  acute: { s: 'ˊ', over: true }, // MODIFIER LETTER ACUTE ACCENT
+  grave: { s: 'ˋ', over: true }, // MODIFIER LETTER GRAVE ACCENT
+  breve: { s: '˘', over: true },
+  check: { s: 'ˇ', over: true }, // CARON
+  mathring: { s: '˚', over: true }, // RING ABOVE
+  overleftarrow: { s: '←', over: true },
+  overleftrightarrow: { s: '↔', over: true },
+  underleftarrow: { s: '←', over: false },
+  underrightarrow: { s: '→', over: false },
   underline: { s: '_', over: false }, // LOW LINE
   overbrace: { s: '⏞', over: true, accent: false, stretchy: true },
   underbrace: { s: '⏟', over: false, accent: false, stretchy: true },
@@ -247,6 +366,11 @@ const _TEX_MATHVARIANT = {
   mathbbm: 'double-struck',
   boldsymbol: 'bold-italic',
   bm: 'bold-italic',
+  pmb: 'bold-italic',
+  mathscr: 'script',
+  mathnormal: 'italic',
+  Bbb: 'double-struck',
+  bold: 'bold',
 };
 
 // Math alphabets as characters. MathML Core (Chromium) ignores every
@@ -329,6 +453,19 @@ const _TEX_DELIM = {
   '\\vert': '|',
   '\\Vert': '‖',
   '\\backslash': '\\',
+  '\\|': '‖',
+  '\\lbrace': '{',
+  '\\rbrace': '}',
+  '\\lbrack': '[',
+  '\\rbrack': ']',
+  '\\lgroup': '⟮',
+  '\\rgroup': '⟯',
+  '\\uparrow': '↑',
+  '\\downarrow': '↓',
+  '\\updownarrow': '↕',
+  '\\Uparrow': '⇑',
+  '\\Downarrow': '⇓',
+  '\\Updownarrow': '⇕',
 };
 
 // Escaped literals: `\{` `\}` `\%` `\$` `\&` `\#` `\_` tokenize as single-character
@@ -348,6 +485,13 @@ const _TEX_SPACING = {
   '!': '',
   quad: '1em',
   qquad: '2em',
+  thinspace: '0.1667em',
+  medspace: '0.2222em',
+  thickspace: '0.2778em',
+  enspace: '0.5em',
+  negthinspace: '',
+  negmedspace: '',
+  negthickspace: '',
 };
 
 // Characters with a TeX meaning this converter does not implement: `&` is an
@@ -486,14 +630,19 @@ const _MATRIX_ENVIRONMENTS = Object.freeze({
   Bmatrix: ['{', '}'],
   vmatrix: ['|', '|'],
   Vmatrix: ['‖', '‖'],
+  smallmatrix: null,
 });
 
 // These common display environments use table markup too. Keep the accepted
 // grammar explicit: arbitrary LaTeX environments and column specifications
 // remain source fallbacks.
-const _TEX_ALIGNMENT_ENVIRONMENTS = new Set(['align', 'aligned', 'split']);
-const _TEX_GATHER_ENVIRONMENTS = new Set(['gather', 'gathered']);
+const _TEX_ALIGNMENT_ENVIRONMENTS = new Set(['align', 'align*', 'aligned', 'split']);
+const _TEX_GATHER_ENVIRONMENTS = new Set(['gather', 'gather*', 'gathered', 'multline', 'multline*']);
 const _TEX_CASES_ENVIRONMENTS = new Set(['cases']);
+// One formula with no table: its content is the equation (numbering is not drawn).
+const _TEX_EQUATION_ENVIRONMENTS = new Set(['equation', 'equation*']);
+const _TEX_ARRAY_ALIGN = { l: 'left', c: 'center', r: 'right' };
+const _TEX_CELL_CLASS = { left: 'math-semantic-blocks-cell--left', right: 'math-semantic-blocks-cell--right' };
 
 function _readTexEnvironmentName(st) {
   const open = _nextTok(st);
@@ -507,7 +656,7 @@ function _readTexEnvironmentName(st) {
       if (depth === 0) {
         const name = st.src.slice(open.e, tk.p).trim();
         st.i = i + 1;
-        if (!/^[A-Za-z]+$/.test(name)) throw new TexUnsupportedError('the environment name is malformed', 'begin');
+        if (!/^[A-Za-z]+\*?$/.test(name)) throw new TexUnsupportedError('the environment name is malformed', 'begin');
         return name;
       }
     }
@@ -515,15 +664,48 @@ function _readTexEnvironmentName(st) {
   throw _unbalanced('environment name braces');
 }
 
+// An array's column specification: l, c and r only (vertical rules and
+// p{…} columns are not typeset). Returns the MathML column alignments.
+function _readTexArraySpec(st) {
+  const open = _nextTok(st);
+  if (!open || open.k !== 'lb') throw new TexUnsupportedError('\\begin{array} needs a braced column specification', 'begin');
+  const close = st.t.findIndex((tk, index) => index >= st.i && tk.k === 'rb');
+  if (close < 0) throw _unbalanced('column specification braces');
+  const spec = st.src.slice(open.e, st.t[close].p).replace(/\s+/g, '');
+  st.i = close + 1;
+  if (!/^[lcr]{1,32}$/.test(spec)) {
+    throw new TexUnsupportedError('an array column specification may use only l, c and r (no | rules or p{…} columns)', 'begin');
+  }
+  return [...spec].map((letter) => _TEX_ARRAY_ALIGN[letter]);
+}
+
+function _closeTexEnvironment(st, name) {
+  const closing = _readTexEnvironmentName(st);
+  if (closing !== name) throw new TexUnsupportedError(`\\begin{${name}} closed by \\end{${closing}}`, 'end');
+}
+
 function _parseTexEnvironment(st) {
   const name = _readTexEnvironmentName(st);
+  if (_TEX_EQUATION_ENVIRONMENTS.has(name)) {
+    // The equation's body is the formula itself; a \tag in it labels the equation.
+    const body = _parseTexRow(st, null, null, true, st.rowDepth === 1);
+    const next = _peekTok(st);
+    if (!next || next.k !== 'cmd' || next.v !== 'end') {
+      throw new TexUnsupportedError(`\\begin{${name}} holds one formula, with no & or \\\\`, 'begin');
+    }
+    _nextTok(st);
+    _closeTexEnvironment(st, name);
+    return body.length === 1 ? body[0] : { t: 'mrow', c: body };
+  }
   const isMatrix = Object.prototype.hasOwnProperty.call(_MATRIX_ENVIRONMENTS, name);
   const isAlignment = _TEX_ALIGNMENT_ENVIRONMENTS.has(name);
   const isGather = _TEX_GATHER_ENVIRONMENTS.has(name);
   const isCases = _TEX_CASES_ENVIRONMENTS.has(name);
-  if (!isMatrix && !isAlignment && !isGather && !isCases) {
+  const isArray = name === 'array';
+  if (!isMatrix && !isAlignment && !isGather && !isCases && !isArray) {
     throw new TexUnsupportedError(`\\begin{${name}} cannot be rendered: ${_TEX_DEFERRED.begin}`, 'begin');
   }
+  const columnAlign = isArray ? _readTexArraySpec(st) : null;
   const delimiters = isMatrix ? _MATRIX_ENVIRONMENTS[name] : null;
 
   const rows = [];
@@ -541,10 +723,22 @@ function _parseTexEnvironment(st) {
     if (isCases && cells.length !== 2) {
       throw new TexUnsupportedError('each cases row needs an expression and a condition separated by &', 'begin');
     }
+    if (isArray && cells.length > columnAlign.length) {
+      throw new TexUnsupportedError('an array row has more cells than its column specification', 'begin');
+    }
     if (!cells.some((cell) => cell.t !== 'mrow' || cell.c?.length)) {
       throw new TexUnsupportedError(`\\begin{${name}} cannot contain an empty row`, 'begin');
     }
-    rows.push({ t: 'mtr', c: cells.map((child) => ({ t: 'mtd', c: [child] })) });
+    rows.push({
+      t: 'mtr',
+      c: cells.map((child, index) => {
+        // Alignment and gather cells are display style, as amsmath sets them
+        // (a table cell is otherwise compact: limits would move to the side).
+        const content = isAlignment || isGather ? { t: 'mstyle', a: { displaystyle: 'true' }, c: [child] } : child;
+        const cellClass = isArray ? _TEX_CELL_CLASS[columnAlign[index]] : null;
+        return { t: 'mtd', ...(cellClass ? { a: { class: cellClass } } : {}), c: [content] };
+      }),
+    });
     cells = [];
   }
   for (;;) {
@@ -600,8 +794,12 @@ function _parseTexEnvironment(st) {
   } else if (isCases) {
     tableAttrs.columnalign = 'left left';
     tableAttrs.class = 'math-semantic-blocks-table--cases';
+  } else if (isArray) {
+    tableAttrs.columnalign = columnAlign.join(' ');
   }
   const table = { t: 'mtable', ...(Object.keys(tableAttrs).length ? { a: tableAttrs } : {}), c: rows };
+  // smallmatrix: a matrix at script size, for one inside a line of text.
+  if (name === 'smallmatrix') return { t: 'mstyle', a: { scriptlevel: '1' }, c: [table] };
   if (!delimiters && !isCases) return table;
   if (isCases) {
     return {
@@ -686,8 +884,59 @@ function _parseTexGroup(st) {
     st.t[st.i] = { ...tk, v: tk.v.slice(1), p: tk.p + 1 };
     return { t: 'mn', s: digit };
   }
-  return _parseTexBase(st);
+  const node = _parseTexBase(st);
+  // A command that draws nothing (\label, \color) is not an argument.
+  if (!node) throw new TexUnsupportedError('a command or script is missing its argument', '');
+  return node;
 }
+
+// A braced argument read and discarded (a colour, a label key): balanced
+// braces, any content. Nothing in it is typeset or passed on.
+function _skipTexRawArg(st, name) {
+  const open = _nextTok(st);
+  if (!open || open.k !== 'lb') throw new TexUnsupportedError(`\\${name} needs a braced argument`, name);
+  let depth = 1;
+  while (st.i < st.t.length) {
+    const tk = st.t[st.i];
+    st.i += 1;
+    if (tk.k === 'lb') depth += 1;
+    else if (tk.k === 'rb') {
+      depth -= 1;
+      if (depth === 0) return;
+    }
+  }
+  throw _unbalanced('braces');
+}
+
+// An optional [ … ] argument read and discarded (a colour model).
+function _skipTexOptionalArg(st) {
+  if (_peekTok(st)?.k !== 'lbrack') return;
+  while (st.i < st.t.length) {
+    const tk = st.t[st.i];
+    st.i += 1;
+    if (tk.k === 'rbrack') return;
+  }
+  throw _unbalanced('brackets');
+}
+
+// The optional [ … ] argument of \xrightarrow, parsed as math, or null.
+function _parseTexOptionalMath(st) {
+  if (_peekTok(st)?.k !== 'lbrack') return null;
+  _nextTok(st);
+  const row = _parseTexRow(st, 'rbrack');
+  if (_peekTok(st)?.k !== 'rbrack') throw _unbalanced('optional argument brackets');
+  _nextTok(st);
+  return row.length === 1 ? row[0] : { t: 'mrow', c: row };
+}
+
+const _starNext = (st) => {
+  const tk = _peekTok(st);
+  if (tk?.k === 'op' && tk.v === '*') {
+    _nextTok(st);
+    return true;
+  }
+  return false;
+};
 
 // The literal text of a \text{…} argument, with the author's spacing. Only
 // the escaped characters (`\{`, `\%`, …) are read as text; any other command
@@ -773,6 +1022,101 @@ function _parseTexCmd(st, name) {
   }
   // A \right with no \left never balances — fail rather than typeset "right".
   if (name === 'right') throw new TexUnsupportedError('\\right has no matching \\left', 'right');
+  if (Object.prototype.hasOwnProperty.call(_TEX_BIG_DELIMS, name)) {
+    // \big( … \Bigg): a fixed size, centred on the axis; \bigl/\bigr open and
+    // close, \bigm is a relation (a thick space either side). \big. is nothing.
+    const { size, role } = _TEX_BIG_DELIMS[name];
+    const delimiter = _parseTexDelim(st, name);
+    if (!delimiter) return null;
+    const a = { stretchy: 'true', symmetric: 'true', minsize: size, maxsize: size };
+    if (role === 'l' || role === 'r') a.fence = 'true';
+    if (role === 'm') Object.assign(a, { lspace: '0.2778em', rspace: '0.2778em' });
+    return { t: 'mo', a, s: delimiter };
+  }
+  if (Object.prototype.hasOwnProperty.call(_TEX_STYLES, name)) {
+    throw new TexUnsupportedError(`\\${name} must begin the math it styles, not be an argument`, name);
+  }
+  if (name === 'not' || name === 'slashed') {
+    // \not=, \not\in, \not{D}; \slashed{D} (Feynman slash) is the same overlay.
+    const target = name === 'slashed' ? _parseTexGroup(st) : _parseTexBase(st);
+    if (!target || (target.t !== 'mo' && target.t !== 'mi') || target.c || [...(target.s || '')].length !== 1) {
+      throw new TexUnsupportedError(`\\${name} must precede a single symbol`, name);
+    }
+    const negated = (name === 'not' && _TEX_NEGATED[target.s]) || `${target.s}\u0338`;
+    return { t: target.t, ...(target.a && !target.limitEligible ? { a: target.a } : {}), s: negated };
+  }
+  if (Object.prototype.hasOwnProperty.call(_TEX_ENCLOSE, name)) {
+    const body = _parseTexGroup(st);
+    // \boxed sets its content in display style at full size, as amsmath does.
+    const content = name === 'boxed' ? { t: 'mstyle', a: { displaystyle: 'true', scriptlevel: '0' }, c: [body] } : body;
+    return { t: 'menclose', a: { notation: _TEX_ENCLOSE[name] }, c: [content] };
+  }
+  if (name === 'phantom') return { t: 'mphantom', c: [_parseTexGroup(st)] };
+  if (name === 'color') {
+    // Colour is not drawn: equations take the host's text colour, so they keep
+    // the theme's contrast in light, dark and high-contrast modes. The switch
+    // and its colour are accepted and the math renders in the text colour.
+    _skipTexOptionalArg(st);
+    _skipTexRawArg(st, name);
+    return null;
+  }
+  if (name === 'textcolor') {
+    _skipTexOptionalArg(st);
+    _skipTexRawArg(st, name);
+    return _parseTexGroup(st);
+  }
+  if (name === 'label') {
+    _skipTexRawArg(st, name); // a cross-reference key: nothing to draw
+    return null;
+  }
+  if (_TEX_IGNORED.has(name)) return null;
+  if (name === 'tag') {
+    const star = _starNext(st);
+    if (!st.display) throw new TexUnsupportedError('\\tag is only typeset in display math', 'tag');
+    if (st.rowDepth !== 1) throw new TexUnsupportedError('\\tag must be at the top level of a display equation', 'tag');
+    if (st.tag != null) throw new TexUnsupportedError('an equation takes one \\tag', 'tag');
+    const text = _parseTexTextArg(st).trim();
+    st.tag = star ? text : `(${text})`;
+    return null;
+  }
+  if (name === 'bra' || name === 'ket' || name === 'braket' || name === 'ketbra') {
+    // Dirac notation (braket and physics packages), unstretched as \bra is.
+    const fence = (s) => ({ t: 'mo', a: { fence: 'true', stretchy: 'false' }, s });
+    const bar = { t: 'mo', a: { fence: 'true', stretchy: 'false', lspace: '0em', rspace: '0em' }, s: '|' };
+    const first = _parseTexGroup(st);
+    if (name === 'bra') return { t: 'mrow', c: [fence('⟨'), first, fence('|')] };
+    if (name === 'ket') return { t: 'mrow', c: [fence('|'), first, fence('⟩')] };
+    if (name === 'ketbra') {
+      const second = _parseTexGroup(st);
+      return { t: 'mrow', c: [fence('|'), first, fence('⟩'), fence('⟨'), second, fence('|')] };
+    }
+    // \braket{a}{b} (physics) or \braket{a|b} (braket: the bar is in the argument).
+    if (_peekTok(st)?.k === 'lb') {
+      const second = _parseTexGroup(st);
+      return { t: 'mrow', c: [fence('⟨'), first, bar, second, fence('⟩')] };
+    }
+    return { t: 'mrow', c: [fence('⟨'), first, fence('⟩')] };
+  }
+  if (name === 'pmod' || name === 'pod') {
+    // amsmath: 8mu (18mu in display), then (mod n) or (n).
+    const modulus = _parseTexGroup(st);
+    const c = [{ t: 'mspace', a: { width: st.display ? '1em' : '0.4444em' }, s: '' }, { t: 'mo', s: '(' }];
+    if (name === 'pmod') c.push({ t: 'mi', s: 'mod' }, { t: 'mspace', a: { width: '0.3333em' }, s: '' });
+    c.push(modulus, { t: 'mo', s: ')' });
+    return { t: 'mrow', c };
+  }
+  if (name === 'bmod') return { t: 'mo', a: { lspace: '0.2778em', rspace: '0.2778em' }, s: 'mod' };
+  if (name === 'colon') return { t: 'mo', a: { lspace: '0em', rspace: '0.1667em' }, s: ':' };
+  if (Object.prototype.hasOwnProperty.call(_TEX_SPACED_RELATIONS, name)) {
+    const thick = () => ({ t: 'mspace', a: { width: '0.2778em' }, s: '' });
+    return { t: 'mrow', c: [thick(), { t: 'mo', s: _TEX_SPACED_RELATIONS[name] }, thick()] };
+  }
+  if (name === 'xrightarrow' || name === 'xleftarrow') {
+    const below = _parseTexOptionalMath(st);
+    const above = _parseTexGroup(st);
+    const arrow = { t: 'mo', a: { stretchy: 'true' }, s: name === 'xrightarrow' ? '→' : '←' };
+    return below ? { t: 'munderover', c: [arrow, below, above] } : { t: 'mover', c: [arrow, above] };
+  }
   if (Object.prototype.hasOwnProperty.call(_TEX_ACCENT, name)) {
     const acc = _TEX_ACCENT[name];
     const base = _parseTexGroup(st);
@@ -795,19 +1139,22 @@ function _parseTexCmd(st, name) {
     };
   }
   if (_TEX_ESCAPED.has(name)) return { t: 'mo', s: name };
-  if (name === 'frac' || name === 'dfrac' || name === 'tfrac') {
+  if (name === 'frac' || name === 'dfrac' || name === 'tfrac' || name === 'cfrac') {
     const num = _parseTexGroup(st);
     const den = _parseTexGroup(st);
-    return { t: 'mfrac', c: [num, den] };
+    // \dfrac and \cfrac are display-style fractions, \tfrac a text-style one.
+    const style = name === 'frac' ? null : name === 'tfrac' ? 'false' : 'true';
+    return { t: 'mfrac', ...(style ? { a: { displaystyle: style } } : {}), c: [num, den] };
   }
-  if (name === 'binom') {
+  if (name === 'binom' || name === 'dbinom' || name === 'tbinom') {
     const num = _parseTexGroup(st);
     const den = _parseTexGroup(st);
+    const style = name === 'binom' ? {} : { displaystyle: name === 'dbinom' ? 'true' : 'false' };
     return {
       t: 'mrow',
       c: [
         { t: 'mo', a: { stretchy: 'true', fence: 'true', symmetric: 'false' }, s: '(' },
-        { t: 'mfrac', a: { linethickness: '0' }, c: [num, den] },
+        { t: 'mfrac', a: { linethickness: '0', ...style }, c: [num, den] },
         { t: 'mo', a: { stretchy: 'true', fence: 'true', symmetric: 'false' }, s: ')' },
       ],
     };
@@ -853,12 +1200,24 @@ function _parseTexCmd(st, name) {
   if (name === 'text' || name === 'mbox') {
     return { t: 'mtext', s: _parseTexTextArg(st) };
   }
+  if (Object.prototype.hasOwnProperty.call(_TEX_TEXT_FONTS, name)) {
+    const variant = _TEX_TEXT_FONTS[name];
+    const text = _parseTexTextArg(st);
+    return variant ? { t: 'mtext', a: { mathvariant: variant }, s: _mathAlphanumeric(text, variant) } : { t: 'mtext', s: text };
+  }
   if (name === 'operatorname') {
     // An operator name sets upright like \sin: a multi-letter <mi>.
+    // \operatorname* takes limits, as \lim does.
+    if (_starNext(st)) {
+      return { t: 'mo', a: { movablelimits: 'true' }, s: _parseTexTextArg(st).trim(), limitEligible: true };
+    }
     return { t: 'mi', s: _parseTexTextArg(st).trim() };
   }
   if (Object.prototype.hasOwnProperty.call(_TEX_GREEK, name)) {
     return { t: 'mi', s: _TEX_GREEK[name] };
+  }
+  if (Object.prototype.hasOwnProperty.call(_TEX_ORD, name)) {
+    return { t: 'mi', s: _TEX_ORD[name] };
   }
   if (Object.prototype.hasOwnProperty.call(_TEX_OP, name)) {
     const limitEligible = _TEX_LIMIT_OPERATORS.has(name);
@@ -969,7 +1328,18 @@ function _parseTexScripts(st, base, limitMode = null) {
 // is how \left…\right finds its closer without consuming it). A `}` ends only a
 // braced row and a `]` only a root index; anywhere else a `]` is an ordinary
 // bracket (the interval [0, 1]) and a stray `}` is an error.
-function _parseTexRow(st, stopKind, stopCmd, stopMatrixBoundary = false) {
+// `continuation` parses the rest of a row already counted (after a style
+// switch, or an equation environment's body): \tag stays at the top level.
+function _parseTexRow(st, stopKind, stopCmd, stopMatrixBoundary = false, continuation = false) {
+  if (!continuation) st.rowDepth = (st.rowDepth || 0) + 1;
+  try {
+    return _parseTexRowItems(st, stopKind, stopCmd, stopMatrixBoundary, continuation);
+  } finally {
+    if (!continuation) st.rowDepth -= 1;
+  }
+}
+
+function _parseTexRowItems(st, stopKind, stopCmd, stopMatrixBoundary, continuation) {
   const out = [];
   for (;;) {
     const tk = _peekTok(st);
@@ -979,6 +1349,13 @@ function _parseTexRow(st, stopKind, stopCmd, stopMatrixBoundary = false) {
     if (stopMatrixBoundary && ((tk.k === 'op' && tk.v === '&') ||
       (tk.k === 'cmd' && (tk.v === '\\' || tk.v === 'end')))) break;
     if (tk.k === 'rb') throw _unbalanced('braces');
+    if (tk.k === 'cmd' && Object.prototype.hasOwnProperty.call(_TEX_STYLES, tk.v)) {
+      // A style switch applies to the rest of its group.
+      _nextTok(st);
+      const rest = _parseTexRow(st, stopKind, stopCmd, stopMatrixBoundary, true);
+      out.push({ t: 'mstyle', a: { ..._TEX_STYLES[tk.v] }, c: rest });
+      break;
+    }
     if (tk.k === 'sup' || tk.k === 'sub') {
       const base = out.pop() || { t: 'mrow', c: [] };
       out.push(_parseTexScripts(st, base));
@@ -1004,9 +1381,26 @@ function _parseTexRow(st, stopKind, stopCmd, stopMatrixBoundary = false) {
 function _texToMathTree(tex, display) {
   const src = String(tex == null ? '' : tex);
   _checkTexBounds(src);
-  const st = { t: _tokTex(src), i: 0, src, display: !!display };
-  const row = _parseTexRow(st, null);
+  const st = { t: _tokTex(src), i: 0, src, display: !!display, rowDepth: 0, tag: null };
+  let row = _parseTexRow(st, null);
   if (st.i < st.t.length) throw _unbalanced('delimiters');
+  if (st.tag != null) {
+    // \tag{…}: the equation centred, its label at the end of the line (CSS:
+    // .math-semantic-blocks-table--tagged). The cell is display style, as the
+    // equation is; a table cell would otherwise be compact.
+    row = [{
+      t: 'mtable',
+      a: { class: 'math-semantic-blocks-table--tagged' },
+      c: [{
+        t: 'mtr',
+        c: [
+          { t: 'mtd', c: [] },
+          { t: 'mtd', c: [{ t: 'mstyle', a: { displaystyle: 'true' }, c: row }] },
+          { t: 'mtd', a: { class: 'math-semantic-blocks-tag' }, c: [{ t: 'mtext', s: st.tag }] },
+        ],
+      }],
+    }];
+  }
   const a = { xmlns: _MML_NS, display: display ? 'block' : 'inline', 'data-tex': src };
   return { t: 'math', a, c: row };
 }
